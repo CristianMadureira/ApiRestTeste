@@ -1,6 +1,7 @@
 package com.example.ApiRestTest.addresses;
 
 import com.example.ApiRestTest.User.NewUser;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -39,8 +40,9 @@ public class NewAddresse {
     private String cep;
 
     @NotNull
+    @JsonBackReference
     @ManyToOne
-    //@JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id")
     private NewUser user;
 
     public NewAddresse(String street, int number, String complement, String district, String city, String state, String cep, NewUser user) {
@@ -52,6 +54,11 @@ public class NewAddresse {
         this.state = state;
         this.cep = cep;
         this.user = user;
+    }
+
+    @Deprecated
+    public NewAddresse() {
+
     }
 
     public long getId() {

@@ -2,6 +2,7 @@ package com.example.ApiRestTest.User;
 
 import com.example.ApiRestTest.addresses.NewAddresse;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
@@ -43,6 +44,7 @@ public class NewUser {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date dateBirth;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "user")
     private List<NewAddresse> adresses = new ArrayList<>();
 

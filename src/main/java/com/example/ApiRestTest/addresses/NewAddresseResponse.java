@@ -21,6 +21,11 @@ public class NewAddresseResponse {
     private String cep;
     private String userName;
 
+    @Deprecated
+    public NewAddresseResponse() {
+
+    }
+
     public NewAddresseResponse(NewAddresse addresse) {
         this.id = addresse.getId();
         this.street = addresse.getStreet();

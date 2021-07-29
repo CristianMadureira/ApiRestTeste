@@ -1,15 +1,16 @@
 package com.example.ApiRestTest.User;
 
+import com.example.ApiRestTest.exceptions.NewUserRegisterException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class NewUserController {
@@ -18,13 +19,25 @@ public class NewUserController {
     NewUserRepository repository;
 
     @PostMapping("/users")
-    public NewUserResponse registerNewUser(@RequestBody @Valid NewUserRequest request, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<NewUserResponse> registerNewUser(@RequestBody @Valid NewUserRequest request, UriComponentsBuilder uriBuilder) {
         NewUser user = request.toModel();
         repository.save(user);
 
-        URI uri= uriBuilder.path("/users{id}").buildAndExpand(user.getId()).toUri();
-        return new NewUserResponse(user);
+        URI uri= uriBuilder.path("/users/{id}").buildAndExpand(user.getId()).toUri();
+        return ResponseEntity.created(uri).body(new NewUserResponse(user));
     }
 
+    @GetMapping("/users/{userId}")
+    public NewUserResponse getUserWithAdresse(@PathVariable Long userId) throws NewUserRegisterException{
+        Optional<NewUser> user = repository.findById(userId);
+
+        if(user.isPresent()) {
+            return new NewUserResponse(user.get());
+        } else {
+            throw new NewUserRegisterException(HttpStatus.BAD_REQUEST, "Desculpe não encontramos um usuário com este id.");
+        }
+
+
+    }
 
 }
