@@ -16,15 +16,19 @@ import java.util.Optional;
 public class NewUserController {
 
     @Autowired
+    NewUserService service;
+
+    @Autowired
     NewUserRepository repository;
 
     @PostMapping("/users")
-    public ResponseEntity<NewUserResponse> registerNewUser(@RequestBody @Valid NewUserRequest request, UriComponentsBuilder uriBuilder) {
-        NewUser user = request.toModel();
-        repository.save(user);
+    public ResponseEntity<NewUserResponse> registerNewUser(@RequestBody @Valid NewUserRequest request, UriComponentsBuilder uriBuilder) throws NewUserRegisterException{
+
+        NewUser user = service.registerNewUser(request);
 
         URI uri= uriBuilder.path("/users/{id}").buildAndExpand(user.getId()).toUri();
         return ResponseEntity.created(uri).body(new NewUserResponse(user));
+
     }
 
     @GetMapping("/users/{userId}")
@@ -36,6 +40,7 @@ public class NewUserController {
         } else {
             throw new NewUserRegisterException(HttpStatus.BAD_REQUEST, "Desculpe não encontramos um usuário com este id.");
         }
+
 
 
     }

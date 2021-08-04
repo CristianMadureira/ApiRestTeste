@@ -2,6 +2,7 @@ package com.example.ApiRestTest.addresses;
 
 import com.example.ApiRestTest.User.NewUser;
 import com.example.ApiRestTest.User.NewUserRepository;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
@@ -35,6 +36,7 @@ public class NewAddresseRequest {
     @NotBlank
     private String state;
 
+    @Length(min = 8,max = 9)
     @NotBlank
     private String cep;
 
